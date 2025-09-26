@@ -1,4 +1,4 @@
-// Your web app's Firebase configuration
+// Web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyBgL7L6cNNtyUAwz5hqPsWZlQ_jiZqGD8k",
     authDomain: "collaborative-whiteboard-692d1.firebaseapp.com",
