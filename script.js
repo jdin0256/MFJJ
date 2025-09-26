@@ -1,4 +1,4 @@
-// Web app's Firebase configuration
+// firebase
 const firebaseConfig = {
     apiKey: "AIzaSyBgL7L6cNNtyUAwz5hqPsWZlQ_jiZqGD8k",
     authDomain: "collaborative-whiteboard-692d1.firebaseapp.com",
@@ -9,18 +9,18 @@ const firebaseConfig = {
     appId: "1:511422222917:web:ed9bb365a4c9500d61892c"
 };
 
-// Initialize Firebase
+// init
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// --- Whiteboard Setup ---
+
 const canvas = document.getElementById('whiteboard');
 const context = canvas.getContext('2d');
 const drawBtn = document.getElementById('drawBtn');
 const eraseBtn = document.getElementById('eraseBtn');
-const clearBtn = document.getElementById('clearBtn'); // Get the new button
+const clearBtn = document.getElementById('clearBtn'); 
 
-// Set canvas size
+
 canvas.width = 800;
 canvas.height = 600;
 
@@ -29,7 +29,7 @@ let lastX = 0;
 let lastY = 0;
 let strokeColor = 'black';
 
-// --- Button Listeners ---
+
 drawBtn.addEventListener('click', () => {
     strokeColor = 'black';
 });
@@ -38,14 +38,12 @@ eraseBtn.addEventListener('click', () => {
     strokeColor = 'white';
 });
 
-// Add a listener for the Clear All button
+
 clearBtn.addEventListener('click', () => {
-    // Send the command to Firebase to remove all drawings
     database.ref('drawings').remove();
 });
 
 
-// --- Drawing Functions ---
 function draw(x0, y0, x1, y1, color) {
     context.beginPath();
     context.moveTo(x0, y0);
@@ -56,7 +54,6 @@ function draw(x0, y0, x1, y1, color) {
     context.closePath();
 }
 
-// --- Event Listeners for Local Drawing ---
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
     [lastX, lastY] = [e.offsetX, e.offsetY];
@@ -83,17 +80,13 @@ canvas.addEventListener('mousemove', (e) => {
 canvas.addEventListener('mouseup', () => isDrawing = false);
 canvas.addEventListener('mouseout', () => isDrawing = false);
 
-// --- Firebase Listener for Collaboration ---
-// This listener adds new drawings as they come in
 database.ref('drawings').on('child_added', (snapshot) => {
     const data = snapshot.val();
     draw(data.x0, data.y0, data.x1, data.y1, data.color);
 });
 
-// Add a new listener to handle the clear event
 database.ref('drawings').on('value', (snapshot) => {
     if (!snapshot.exists()) {
-        // If the 'drawings' node is empty, clear the canvas
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 });
